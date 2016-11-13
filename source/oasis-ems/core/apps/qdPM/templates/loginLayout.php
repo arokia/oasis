@@ -96,8 +96,10 @@
   
   <div class="login-fade-in"></div>
     
+
+  
   <div class="login-page-logo">
-	 
+	<h2 title="India" class="site-slogan"> 
    <?php 
       if(is_file(sfConfig::get('sf_upload_dir')  . '/' . sfConfig::get('app_app_logo')))
       {
@@ -107,15 +109,24 @@
       {
         echo sfConfig::get('app_app_name');
       }         
-    ?>
+    ?> 
+      
+      India</h2>
     
   </div>  
   <!-- BEGIN LOGIN -->
+<div class="footer-new">
+  
   <div class="content">
     
     <?php echo $sf_content ?>
   </div>
-
+  </div>
+  
+<div class="footer-new">
+    
+    
+  </div>
 <!--  <div class="copyright">
 	 <a href="http://qdpm.net" target="_blank">qdPM <?php echo sfConfig::get('app_qdpm_version') ?></a> <br> Copyright &copy; <?php echo  date('Y') ?> <a href="http://qdpm.net" target="_blank">qdpm.net</a>
   </div>-->

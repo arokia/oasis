@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2016 at 05:41 AM
+-- Generation Time: Nov 13, 2016 at 10:34 AM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.5.38
 
@@ -52,9 +52,9 @@ CREATE TABLE `configuration` (
 
 INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (1, 'app_administrator_email', 'admin@localhost.com'),
-(2, 'app_administrator_password', '$P$EZjqF/PoZXovRBy2T2U7eIBWR5qDbZ.'),
-(3, 'app_app_name', 'Oasis Event Management System'),
-(4, 'app_app_short_name', 'OEMS'),
+(2, 'app_administrator_password', '$P$E5VHWWi.nov29PFA2GS8z1GMOolgTo/'),
+(3, 'app_app_name', 'Oasis OnTracK'),
+(4, 'app_app_short_name', 'Oasis ontrack'),
 (5, 'app_email_label', 'OEMS-'),
 (6, 'app_default_skin', 'qdPM'),
 (7, 'sf_default_timezone', 'Asia/Kolkata'),
@@ -93,13 +93,13 @@ INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (40, 'app_use_fck_editor', 'on'),
 (41, 'app_notify_all_project_team', 'off'),
 (42, 'app_notify_all_customers', 'off'),
-(43, 'app_use_single_email', 'off'),
+(43, 'app_use_single_email', 'on'),
 (44, 'app_single_email_addres_from', ''),
 (45, 'app_single_name_from', ''),
 (46, 'app_use_smtp', 'off'),
 (47, 'app_smtp_server', ''),
 (48, 'app_smtp_port', '25'),
-(49, 'app_smtp_encryption', NULL),
+(49, 'app_smtp_encryption', ''),
 (50, 'app_smtp_login', ''),
 (51, 'app_smtp_pass', ''),
 (52, 'app_use_ldap_login', 'off'),
@@ -111,18 +111,21 @@ INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (58, 'app_show_user_email', 'off'),
 (59, 'app_show_user_photo', 'on'),
 (60, 'app_tasks_fields_type', 'off'),
-(61, 'app_login_page_heading', 'Welcome to Oasis'),
-(62, 'app_login_page_content', 'Event management'),
+(61, 'app_login_page_heading', 'Welcome to Oasis OnTracK'),
+(62, 'app_login_page_content', ''),
 (63, 'app_new_user_email_subject', NULL),
 (64, 'app_new_user_email_body', ''),
 (65, 'app_amount_previous_comments', '2'),
 (66, 'app_rows_limit', '150'),
-(67, 'app_tasks_columns_list', 'TasksGroups,Versions,ProjectsPhases,TasksPriority,Name,TasksStatus,TasksTypes,AssignedTo,EstimatedTime,WorkHours,DueDate,Progress'),
-(68, 'app_send_email_to_owner', 'off'),
+(67, 'app_tasks_columns_list', 'TasksGroups,Versions,ProjectsPhases,TasksPriority,Name,TasksStatus,TasksTypes,AssignedTo,CreatedBy,EstimatedTime,WorkHours,StartDate,DueDate,Progress'),
+(68, 'app_send_email_to_owner', 'on'),
 (69, 'app_public_tickets_use_antispam', 'on'),
 (70, 'app_app_logo', 'country-logo.png'),
 (71, 'app_use_javascript_dropdown', 'on'),
-(72, 'app_login_background', 'What we do.jpg');
+(72, 'app_login_background', 'What we do.jpg'),
+(73, 'app_notify_all_tasks', 'on'),
+(74, 'app_notify_all_tickets', 'off'),
+(75, 'app_notify_all_discussions', 'off');
 
 -- --------------------------------------------------------
 
@@ -252,7 +255,8 @@ CREATE TABLE `extra_fields` (
 --
 
 INSERT INTO `extra_fields` (`id`, `name`, `bind_type`, `type`, `sort_order`, `active`, `display_in_list`) VALUES
-(9, 'Phone', 'users', 'text', 0, 1, 1);
+(9, 'Phone', 'users', 'text', 0, 1, 1),
+(12, 'Duration', 'projects', 'date_range', 0, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -272,7 +276,8 @@ CREATE TABLE `extra_fields_list` (
 --
 
 INSERT INTO `extra_fields_list` (`id`, `extra_fields_id`, `bind_id`, `value`) VALUES
-(102, 9, 5, '');
+(102, 9, 5, ''),
+(103, 12, 7, '2016-11-01|2016-11-30');
 
 -- --------------------------------------------------------
 
@@ -341,7 +346,7 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `projects_status_id`, `projects_types_id`, `created_by`, `name`, `description`, `team`, `created_at`, `order_tasks_by`) VALUES
-(7, 1, 3, 3, 'Project1', '', '5,3,4', '2016-11-12 19:58:43', '');
+(7, 1, 3, 3, 'Education Project1', '<p>providing education at site1 school</p>', '3,6,4,5', '2016-11-12 19:58:43', '');
 
 -- --------------------------------------------------------
 
@@ -356,6 +361,13 @@ CREATE TABLE `projects_comments` (
   `description` text,
   `created_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `projects_comments`
+--
+
+INSERT INTO `projects_comments` (`id`, `projects_id`, `created_by`, `description`, `created_at`) VALUES
+(2, 7, 3, 'Assigned To: staff1', '2016-11-13 13:04:02');
 
 -- --------------------------------------------------------
 
@@ -396,7 +408,12 @@ CREATE TABLE `projects_reports` (
 --
 
 INSERT INTO `projects_reports` (`id`, `users_id`, `name`, `display_on_home`, `projects_id`, `projects_type_id`, `projects_status_id`, `in_team`, `sort_order`, `display_in_menu`, `visible_on_home`) VALUES
-(3, 3, 'Project1 Tasks report', 1, '7', '3', '1', 0, NULL, 1, NULL);
+(3, 3, 'Project1 Tasks report', 1, '7', '3', '1', 0, NULL, 1, NULL),
+(4, 6, 'My Project', 1, '7', '5,3,7,6,2,4', '1', 0, NULL, 1, NULL),
+(5, 3, 'staff1 report', 1, '7', '5,3,7,6,2,4', '1,2,3,4', 6, NULL, 1, NULL),
+(6, 3, 'staff2 report', 1, '7', '5,3,7,6,2,4', '1,2,3,4', 4, NULL, 1, NULL),
+(7, 3, 'staff3 report', 1, '7', '5,3,7,6,2,4', '1,2,3,4', 5, NULL, 1, NULL),
+(8, 3, 'staff4 report', 1, '7', '5,3,7,6,2,4', '1,2,3,4', 8, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -443,7 +460,9 @@ INSERT INTO `projects_types` (`id`, `name`, `sort_order`, `active`) VALUES
 (2, 'Outreach', 1, 1),
 (3, 'Education', 0, 1),
 (4, 'Internal', 2, 1),
-(5, 'Community Building', 0, 1);
+(5, 'Community Building', 0, 1),
+(6, 'vocational training', 0, 1),
+(7, 'sports', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -480,8 +499,13 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`id`, `projects_id`, `tasks_status_id`, `tasks_priority_id`, `tasks_type_id`, `tasks_label_id`, `tasks_groups_id`, `projects_phases_id`, `versions_id`, `created_by`, `name`, `description`, `assigned_to`, `estimated_time`, `due_date`, `created_at`, `tickets_id`, `closed_date`, `discussion_id`, `start_date`, `progress`) VALUES
-(23, 7, 1, 5, 1, 1, NULL, NULL, NULL, 3, 'task1', '', '3,4', NULL, NULL, '2016-11-12 19:59:29', NULL, NULL, NULL, NULL, NULL),
-(24, 7, 1, 5, 1, 1, NULL, NULL, NULL, 3, 'staff-task', '', '4', NULL, '2016-11-15', '2016-11-12 20:00:19', NULL, NULL, NULL, '2016-11-13', 10);
+(23, 7, 7, 5, 1, 1, NULL, NULL, NULL, 3, 'task1', '', '3,4', 10, '2016-11-09', '2016-11-12 19:59:29', NULL, '2016-11-13', NULL, '2016-11-01', 5),
+(24, 7, 7, 5, 1, 1, NULL, NULL, NULL, 3, 'staff-task', '', '6,4', 3, '2016-11-15', '2016-11-12 20:00:19', NULL, '2016-11-13', NULL, '2016-11-13', 10),
+(25, 7, 3, 2, 1, 1, NULL, NULL, NULL, 3, 'task2', '<p>tutions</p>', '3,6,4,5', 40, '2016-11-10', '2016-11-13 13:16:01', NULL, NULL, NULL, '2016-11-01', 5),
+(26, 7, 3, 5, 3, 1, NULL, NULL, NULL, 3, 'entry task', '<p>not able to complete overload with other work</p>', '3,6,4,5', 20, '2016-11-30', '2016-11-13 14:14:54', NULL, NULL, NULL, '2016-11-01', 50),
+(27, 7, 9, 5, 1, 1, NULL, NULL, NULL, 6, 'task3', '', '6,4,5', NULL, NULL, '2016-11-13 14:24:04', NULL, NULL, NULL, NULL, NULL),
+(28, 7, 1, 5, 3, 1, NULL, NULL, NULL, 6, 'reporting to office', '', '6,4,5', 10, '2016-11-30', '2016-11-13 14:29:16', NULL, NULL, NULL, '2016-11-01', NULL),
+(29, 7, 1, 5, 1, 1, NULL, NULL, NULL, 6, 'task1', '', '6', NULL, NULL, '2016-11-13 14:38:52', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -501,6 +525,18 @@ CREATE TABLE `tasks_comments` (
   `created_at` datetime DEFAULT NULL,
   `progress` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tasks_comments`
+--
+
+INSERT INTO `tasks_comments` (`id`, `tasks_id`, `created_by`, `tasks_status_id`, `tasks_priority_id`, `due_date`, `worked_hours`, `description`, `created_at`, `progress`) VALUES
+(25, 24, 6, 7, NULL, NULL, NULL, NULL, '2016-11-13 13:07:22', NULL),
+(26, 23, 6, 7, NULL, NULL, NULL, NULL, '2016-11-13 13:08:18', NULL),
+(27, 24, 3, NULL, NULL, NULL, NULL, 'Assigned To: staff1', '2016-11-13 13:16:42', NULL),
+(28, 25, 6, NULL, NULL, NULL, NULL, 'Assigned To: coordinator1', '2016-11-13 14:29:38', NULL),
+(29, 26, 6, NULL, NULL, NULL, NULL, 'Assigned To: coordinator1', '2016-11-13 14:30:27', NULL),
+(30, 25, 6, 3, NULL, NULL, NULL, NULL, '2016-11-13 14:30:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -583,13 +619,9 @@ CREATE TABLE `tasks_status` (
 
 INSERT INTO `tasks_status` (`id`, `name`, `group`, `sort_order`, `default_value`, `active`) VALUES
 (1, 'Open', 'open', 0, 1, 1),
-(2, 'Suspended', 'closed', 6, NULL, 1),
-(3, 'Waiting Assessment', 'open', 0, NULL, 1),
-(4, 'Re-opened', 'open', 2, NULL, 1),
-(5, 'Done?', 'done', 1, NULL, 1),
-(6, 'Paid', 'closed', 5, NULL, 1),
-(7, 'Completed', 'closed', 4, NULL, 1),
-(8, 'Lost', 'closed', 7, NULL, 1);
+(3, 'not done', 'done', 0, 0, 1),
+(7, 'Completed', 'closed', 4, 0, 1),
+(9, 'progress', 'open', 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -610,9 +642,9 @@ CREATE TABLE `tasks_types` (
 --
 
 INSERT INTO `tasks_types` (`id`, `name`, `sort_order`, `default_value`, `active`) VALUES
-(1, 'Change Priority Rate (Hourly rate $25.00)', 0, 1, 1),
-(2, 'Changes (Hourly rate $15.00)', 0, NULL, 1),
-(3, 'Defects (Hourly rate $0.00)', 0, NULL, 1);
+(1, 'Field', 0, 1, 1),
+(2, 'community office', 0, NULL, 1),
+(3, 'administrative office', 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -742,9 +774,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `users_group_id`, `name`, `photo`, `email`, `culture`, `password`, `active`, `skin`) VALUES
-(3, 4, 'manager1', '', 'manager@localhost.com', 'en', '$P$ELk8wYJ7aFD1eshQTUP./qaD/K84kb.', 1, NULL),
-(4, 2, 'develoer1', '', 'developer@localhost.com', 'en', '$P$EhIRWtQkk4mSPMdZEaK492VM95QVw7.', 1, NULL),
-(5, 2, 'Kumar', '', 'kumar@localhost.com', 'en', '$P$ExvcIN0u2YVy8SRC8H2QtJTJ7.TacC0', 1, NULL);
+(3, 4, 'coordinator1', '', 'coordinator1@localhost.com', 'en', '$P$ELssNdCNW.Ta3infYMKxxMh1YD5VVX0', 1, NULL),
+(4, 2, 'staff2', '', 'staff2@localhost.com', 'en', '$P$EE.YFjlVZW6YQSSDFY1z8nsufSoIGu1', 1, NULL),
+(5, 2, 'staff3', '', 'staff3@localhost.com', 'en', '$P$EnljjuIYbnA3vkpC2xFh0hAId0XKXS1', 1, NULL),
+(6, 2, 'staff1', '', 'staff1@localhost.com', 'en', '$P$ECHDv02lidLTFear8QOwU3s8dkFWz1/', 1, NULL),
+(7, 4, 'coordinator2', '', 'coordinator2@localhost.com', 'en', '$P$EUbuez3QCY8JxcyjKtMbGWSgxeMOL9/', 1, NULL),
+(8, 2, 'staff4', '', 'staff4@localhost.com', 'en', '$P$E1icz/hGCBcY8rpy9hMNRVpAgyICAk.', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -772,9 +807,9 @@ CREATE TABLE `users_groups` (
 
 INSERT INTO `users_groups` (`id`, `name`, `allow_view_all`, `allow_manage_projects`, `allow_manage_tasks`, `allow_manage_tickets`, `allow_manage_users`, `allow_manage_configuration`, `allow_manage_tasks_viewonly`, `allow_manage_discussions`, `allow_manage_discussions_viewonly`) VALUES
 (1, 'Admin', 1, 1, 1, 1, 1, 1, NULL, 1, NULL),
-(2, 'Staff', NULL, 3, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Staff', NULL, 3, 4, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 'Client', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(4, 'Organizer', NULL, 1, 1, NULL, 1, NULL, NULL, NULL, NULL);
+(4, 'Co-ordinator', NULL, 1, 1, NULL, 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -809,7 +844,7 @@ CREATE TABLE `user_reports` (
 
 INSERT INTO `user_reports` (`id`, `users_id`, `name`, `display_on_home`, `projects_id`, `projects_type_id`, `projects_status_id`, `assigned_to`, `tasks_status_id`, `tasks_type_id`, `tasks_label_id`, `due_date_from`, `due_date_to`, `created_from`, `created_to`, `closed_from`, `closed_to`, `sort_order`) VALUES
 (3, 3, 'My tasks', 1, '', NULL, NULL, '3', NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 3, 'dev1', 1, '', NULL, NULL, '4', '1', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(5, 6, 'My Task', 1, '7', '5,3,7,6,2,4', '1,2,3,4', '3,6,4,5', '1,9,3,7', '3,2,1', '1,3', '2016-11-01', '2016-11-30', '2016-11-01', '2016-11-30', '2016-11-01', '2016-11-30', NULL);
 
 -- --------------------------------------------------------
 
@@ -1122,7 +1157,7 @@ ALTER TABLE `attachments`
 -- AUTO_INCREMENT for table `configuration`
 --
 ALTER TABLE `configuration`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 --
 -- AUTO_INCREMENT for table `departments`
 --
@@ -1157,12 +1192,12 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT for table `extra_fields`
 --
 ALTER TABLE `extra_fields`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `extra_fields_list`
 --
 ALTER TABLE `extra_fields_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 --
 -- AUTO_INCREMENT for table `phases`
 --
@@ -1182,7 +1217,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `projects_comments`
 --
 ALTER TABLE `projects_comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `projects_phases`
 --
@@ -1192,7 +1227,7 @@ ALTER TABLE `projects_phases`
 -- AUTO_INCREMENT for table `projects_reports`
 --
 ALTER TABLE `projects_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `projects_status`
 --
@@ -1202,17 +1237,17 @@ ALTER TABLE `projects_status`
 -- AUTO_INCREMENT for table `projects_types`
 --
 ALTER TABLE `projects_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT for table `tasks_comments`
 --
 ALTER TABLE `tasks_comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT for table `tasks_groups`
 --
@@ -1232,7 +1267,7 @@ ALTER TABLE `tasks_priority`
 -- AUTO_INCREMENT for table `tasks_status`
 --
 ALTER TABLE `tasks_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `tasks_types`
 --
@@ -1267,7 +1302,7 @@ ALTER TABLE `tickets_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `users_groups`
 --
@@ -1277,7 +1312,7 @@ ALTER TABLE `users_groups`
 -- AUTO_INCREMENT for table `user_reports`
 --
 ALTER TABLE `user_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `versions`
 --

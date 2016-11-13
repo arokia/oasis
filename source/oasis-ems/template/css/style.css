@@ -40,7 +40,7 @@ you can optionally include the following CSS and JavaScript to work around this 
   width: device-width; 
 }
 
-@-moz-viewport { 
+@-moz-viewport {
   width: device-width; 
 }
 
