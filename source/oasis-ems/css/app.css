@@ -233,7 +233,7 @@ div.skinsList ul li {float: left;text-align: center;padding-top: 10px; }
 
 .login-page-logo{
   margin: 0 auto;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
   padding: 15px;
   text-align: center;
   color: white;

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2016 at 01:35 PM
+-- Generation Time: Nov 13, 2016 at 05:41 AM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.5.38
 
@@ -57,7 +57,7 @@ INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (4, 'app_app_short_name', 'OEMS'),
 (5, 'app_email_label', 'OEMS-'),
 (6, 'app_default_skin', 'qdPM'),
-(7, 'sf_default_timezone', 'America/New_York'),
+(7, 'sf_default_timezone', 'Asia/Kolkata'),
 (8, 'sf_default_culture', 'en'),
 (9, 'app_rows_per_page', '15'),
 (10, 'app_custom_short_date_format', 'M d, Y'),
@@ -85,8 +85,8 @@ INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (32, 'app_use_public_tickets', 'on'),
 (33, 'app_public_tickets_show_login_link', 'off'),
 (34, 'app_public_tickets_allow_attachments', 'on'),
-(35, 'app_use_project_phases', 'on'),
-(36, 'app_use_project_versions', 'on'),
+(35, 'app_use_project_phases', 'off'),
+(36, 'app_use_project_versions', 'off'),
 (37, 'app_use_project_discussions', 'on'),
 (38, 'app_use_tasks_groups', 'on'),
 (39, 'app_use_tasks_timetracker', 'on'),
@@ -111,17 +111,18 @@ INSERT INTO `configuration` (`id`, `key`, `value`) VALUES
 (58, 'app_show_user_email', 'off'),
 (59, 'app_show_user_photo', 'on'),
 (60, 'app_tasks_fields_type', 'off'),
-(61, 'app_login_page_heading', 'Welcome to qdPM'),
-(62, 'app_login_page_content', ''),
+(61, 'app_login_page_heading', 'Welcome to Oasis'),
+(62, 'app_login_page_content', 'Event management'),
 (63, 'app_new_user_email_subject', NULL),
 (64, 'app_new_user_email_body', ''),
 (65, 'app_amount_previous_comments', '2'),
 (66, 'app_rows_limit', '150'),
-(67, 'app_tasks_columns_list', 'TasksGroups,Versions,ProjectsPhases,TasksPriority,Name,TasksStatus,TasksTypes,AssignedTo,EstimatedTime,WorkHours,TogoHours,ActualTime,DueDate'),
+(67, 'app_tasks_columns_list', 'TasksGroups,Versions,ProjectsPhases,TasksPriority,Name,TasksStatus,TasksTypes,AssignedTo,EstimatedTime,WorkHours,DueDate,Progress'),
 (68, 'app_send_email_to_owner', 'off'),
 (69, 'app_public_tickets_use_antispam', 'on'),
-(70, 'app_app_logo', ''),
-(71, 'app_use_javascript_dropdown', 'on');
+(70, 'app_app_logo', 'country-logo.png'),
+(71, 'app_use_javascript_dropdown', 'on'),
+(72, 'app_login_background', 'What we do.jpg');
 
 -- --------------------------------------------------------
 
@@ -223,6 +224,13 @@ CREATE TABLE `events` (
   `users_id` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`event_id`, `event_name`, `start_date`, `end_date`, `details`, `users_id`) VALUES
+(3, 'Visit Kilpauk Area', '2016-11-14 01:55:00', '2016-11-15 14:00:00', 'visit and collect data on poverty', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -244,14 +252,6 @@ CREATE TABLE `extra_fields` (
 --
 
 INSERT INTO `extra_fields` (`id`, `name`, `bind_type`, `type`, `sort_order`, `active`, `display_in_list`) VALUES
-(1, 'Review Brief', 'projects', 'date', 2, 1, NULL),
-(2, 'Design', 'projects', 'date', 3, 1, NULL),
-(3, 'Development', 'projects', 'date', 4, 1, NULL),
-(4, 'Site Test', 'projects', 'date', 5, 1, NULL),
-(5, 'UAT', 'projects', 'date', 6, 1, NULL),
-(6, 'Go Live', 'projects', 'date', 7, NULL, 1),
-(7, 'Live Url', 'projects', 'url', 0, 1, NULL),
-(8, 'Test Url', 'projects', 'url', 1, 1, NULL),
 (9, 'Phone', 'users', 'text', 0, 1, 1);
 
 -- --------------------------------------------------------
@@ -266,6 +266,13 @@ CREATE TABLE `extra_fields_list` (
   `bind_id` int(11) NOT NULL DEFAULT '0',
   `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `extra_fields_list`
+--
+
+INSERT INTO `extra_fields_list` (`id`, `extra_fields_id`, `bind_id`, `value`) VALUES
+(102, 9, 5, '');
 
 -- --------------------------------------------------------
 
@@ -284,8 +291,8 @@ CREATE TABLE `phases` (
 --
 
 INSERT INTO `phases` (`id`, `name`, `default_values`) VALUES
-(1, 'New Site', 'Quotes\r\nGraphic Design\r\nDevelopment\r\nSite Test\r\nUser Test\r\nGo Live\r\nWarranty'),
-(2, 'Support', 'Quotes\r\nDefects\r\nChanges\r\n');
+(1, 'New Project', 'Concept\r\nExecution\r\nReview'),
+(2, 'Support', 'Maintenance');
 
 -- --------------------------------------------------------
 
@@ -328,6 +335,13 @@ CREATE TABLE `projects` (
   `created_at` datetime DEFAULT NULL,
   `order_tasks_by` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `projects`
+--
+
+INSERT INTO `projects` (`id`, `projects_status_id`, `projects_types_id`, `created_by`, `name`, `description`, `team`, `created_at`, `order_tasks_by`) VALUES
+(7, 1, 3, 3, 'Project1', '', '5,3,4', '2016-11-12 19:58:43', '');
 
 -- --------------------------------------------------------
 
@@ -377,6 +391,13 @@ CREATE TABLE `projects_reports` (
   `visible_on_home` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `projects_reports`
+--
+
+INSERT INTO `projects_reports` (`id`, `users_id`, `name`, `display_on_home`, `projects_id`, `projects_type_id`, `projects_status_id`, `in_team`, `sort_order`, `display_in_menu`, `visible_on_home`) VALUES
+(3, 3, 'Project1 Tasks report', 1, '7', '3', '1', 0, NULL, 1, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -419,9 +440,10 @@ CREATE TABLE `projects_types` (
 --
 
 INSERT INTO `projects_types` (`id`, `name`, `sort_order`, `active`) VALUES
-(2, 'New Site', 1, 1),
-(3, 'Support', 0, 1),
-(4, 'Internal', 2, 1);
+(2, 'Outreach', 1, 1),
+(3, 'Education', 0, 1),
+(4, 'Internal', 2, 1),
+(5, 'Community Building', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -452,6 +474,14 @@ CREATE TABLE `tasks` (
   `start_date` date DEFAULT NULL,
   `progress` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `projects_id`, `tasks_status_id`, `tasks_priority_id`, `tasks_type_id`, `tasks_label_id`, `tasks_groups_id`, `projects_phases_id`, `versions_id`, `created_by`, `name`, `description`, `assigned_to`, `estimated_time`, `due_date`, `created_at`, `tickets_id`, `closed_date`, `discussion_id`, `start_date`, `progress`) VALUES
+(23, 7, 1, 5, 1, 1, NULL, NULL, NULL, 3, 'task1', '', '3,4', NULL, NULL, '2016-11-12 19:59:29', NULL, NULL, NULL, NULL, NULL),
+(24, 7, 1, 5, 1, 1, NULL, NULL, NULL, 3, 'staff-task', '', '4', NULL, '2016-11-15', '2016-11-12 20:00:19', NULL, NULL, NULL, '2016-11-13', 10);
 
 -- --------------------------------------------------------
 
@@ -503,13 +533,8 @@ CREATE TABLE `tasks_labels` (
 --
 
 INSERT INTO `tasks_labels` (`id`, `name`, `sort_order`, `default_value`, `active`) VALUES
-(1, 'Task', 0, 1, 1),
-(2, 'Bug', 1, NULL, 1),
-(3, 'Idea', 2, NULL, 1),
-(4, 'Issue', 4, NULL, NULL),
-(5, 'Quote', 3, NULL, 1),
-(6, 'Change', 0, NULL, 1),
-(7, 'PlugIn', 0, NULL, 1);
+(1, 'Activity', 0, 1, 1),
+(3, 'Idea', 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -712,6 +737,15 @@ CREATE TABLE `users` (
   `skin` varchar(64) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `users_group_id`, `name`, `photo`, `email`, `culture`, `password`, `active`, `skin`) VALUES
+(3, 4, 'manager1', '', 'manager@localhost.com', 'en', '$P$ELk8wYJ7aFD1eshQTUP./qaD/K84kb.', 1, NULL),
+(4, 2, 'develoer1', '', 'developer@localhost.com', 'en', '$P$EhIRWtQkk4mSPMdZEaK492VM95QVw7.', 1, NULL),
+(5, 2, 'Kumar', '', 'kumar@localhost.com', 'en', '$P$ExvcIN0u2YVy8SRC8H2QtJTJ7.TacC0', 1, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -738,10 +772,9 @@ CREATE TABLE `users_groups` (
 
 INSERT INTO `users_groups` (`id`, `name`, `allow_view_all`, `allow_manage_projects`, `allow_manage_tasks`, `allow_manage_tickets`, `allow_manage_users`, `allow_manage_configuration`, `allow_manage_tasks_viewonly`, `allow_manage_discussions`, `allow_manage_discussions_viewonly`) VALUES
 (1, 'Admin', 1, 1, 1, 1, 1, 1, NULL, 1, NULL),
-(2, 'Developer', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'Staff', NULL, 3, 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (3, 'Client', NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL),
-(4, 'Manager', 1, 1, 1, 1, 1, NULL, NULL, NULL, NULL),
-(5, 'Designer', NULL, NULL, 1, NULL, NULL, NULL, 1, NULL, NULL);
+(4, 'Organizer', NULL, 1, 1, NULL, 1, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -769,6 +802,14 @@ CREATE TABLE `user_reports` (
   `closed_to` date DEFAULT NULL,
   `sort_order` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `user_reports`
+--
+
+INSERT INTO `user_reports` (`id`, `users_id`, `name`, `display_on_home`, `projects_id`, `projects_type_id`, `projects_status_id`, `assigned_to`, `tasks_status_id`, `tasks_type_id`, `tasks_label_id`, `due_date_from`, `due_date_to`, `created_from`, `created_to`, `closed_from`, `closed_to`, `sort_order`) VALUES
+(3, 3, 'My tasks', 1, '', NULL, NULL, '3', NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 3, 'dev1', 1, '', NULL, NULL, '4', '1', NULL, '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1081,7 +1122,7 @@ ALTER TABLE `attachments`
 -- AUTO_INCREMENT for table `configuration`
 --
 ALTER TABLE `configuration`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 --
 -- AUTO_INCREMENT for table `departments`
 --
@@ -1111,7 +1152,7 @@ ALTER TABLE `discussions_status`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `extra_fields`
 --
@@ -1121,7 +1162,7 @@ ALTER TABLE `extra_fields`
 -- AUTO_INCREMENT for table `extra_fields_list`
 --
 ALTER TABLE `extra_fields_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 --
 -- AUTO_INCREMENT for table `phases`
 --
@@ -1136,7 +1177,7 @@ ALTER TABLE `phases_status`
 -- AUTO_INCREMENT for table `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `projects_comments`
 --
@@ -1151,7 +1192,7 @@ ALTER TABLE `projects_phases`
 -- AUTO_INCREMENT for table `projects_reports`
 --
 ALTER TABLE `projects_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `projects_status`
 --
@@ -1161,12 +1202,12 @@ ALTER TABLE `projects_status`
 -- AUTO_INCREMENT for table `projects_types`
 --
 ALTER TABLE `projects_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `tasks_comments`
 --
@@ -1226,7 +1267,7 @@ ALTER TABLE `tickets_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `users_groups`
 --
@@ -1236,7 +1277,7 @@ ALTER TABLE `users_groups`
 -- AUTO_INCREMENT for table `user_reports`
 --
 ALTER TABLE `user_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `versions`
 --

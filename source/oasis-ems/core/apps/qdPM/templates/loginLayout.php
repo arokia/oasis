@@ -115,10 +115,10 @@
     
     <?php echo $sf_content ?>
   </div>
-  
-  <div class="copyright">
+
+<!--  <div class="copyright">
 	 <a href="http://qdpm.net" target="_blank">qdPM <?php echo sfConfig::get('app_qdpm_version') ?></a> <br> Copyright &copy; <?php echo  date('Y') ?> <a href="http://qdpm.net" target="_blank">qdpm.net</a>
-  </div>
+  </div>-->
             
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
